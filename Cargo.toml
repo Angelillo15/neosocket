@@ -1,0 +1,21 @@
+[package]
+name = "neosocket"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+actix = "0.13.3"
+actix-web = "4.6.0"
+actix-http = "3.7.0"
+actix-multipart = "0.6.1"
+actix-web-actors = "4.3.0"
+tokio = { version = "1.37.0", features = ["full"] }
+simple_logger = "5.0.0"
+serde_json = "1.0.117"
+serde = { version = "1.0.202", features = ["derive"] }
+log = "0.4.21"
+dotenv = "0.15.0"
+env_logger = "0.11.3"
+uuid = { version = "1.8.0", features = ["v4", "fast-rng", "macro-diagnostics", "serde"] }
+tokio_schedule = "0.3.1"
+chrono = "0.4.38"
