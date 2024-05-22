@@ -37,6 +37,7 @@ async fn main() -> std::io::Result<()> {
         app = app.app_data(app_state.clone());
 
         app = app.service(services::room::endpoints(web::scope("/room")));
+        app = app.service(services::ws::endpoints(web::scope("/ws")));
         app = app.service(services::health::endpoints(web::scope("")));
         app
     })
