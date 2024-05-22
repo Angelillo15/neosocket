@@ -24,4 +24,11 @@ impl ChannelManager {
         self.channels.lock().unwrap().insert(id, channel.clone());
         id
     }
+
+    pub fn channel_exists(&self, id: String) -> bool {
+        match Uuid::parse_str(&id) {
+            Ok(uuid) => self.channels.lock().unwrap().contains_key(&uuid),
+            Err(_) => false,
+        }
+    }
 }
