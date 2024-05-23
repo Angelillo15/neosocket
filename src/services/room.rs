@@ -2,10 +2,12 @@ use actix_web::{get, HttpResponse, post, Scope};
 use actix_web::web::Data;
 
 use crate::AppState;
-use crate::managers::channel::Channel;
 
 #[get("/")]
+#[cfg(debug_assertions)]
 pub async fn index(app_data: Data<AppState>) -> HttpResponse {
+    use crate::managers::channel::Channel;
+
     let channel_manager = app_data.channel_manager.clone();
     let channels = channel_manager.lock().unwrap();
     let channels: Vec<Channel> = channels
@@ -19,6 +21,12 @@ pub async fn index(app_data: Data<AppState>) -> HttpResponse {
     HttpResponse::Ok().json(channels.clone())
 }
 
+#[get("/")]
+#[cfg(not(debug_assertions))]
+pub async fn index() -> HttpResponse {
+    HttpResponse::Ok().finish()
+}
+
 #[post("/")]
 pub async fn create(app_data: Data<AppState>) -> HttpResponse {
     let channel_manager = app_data.channel_manager.lock().unwrap();
@@ -28,5 +36,5 @@ pub async fn create(app_data: Data<AppState>) -> HttpResponse {
 }
 
 pub fn endpoints(scope: Scope) -> Scope {
-    return scope.service(index).service(create);
+    scope.service(index).service(create)
 }
