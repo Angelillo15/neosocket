@@ -1,17 +1,17 @@
-use std::sync::mpsc::channel;
-use std::sync::{Arc, Mutex};
 
-use actix::{Actor, Addr, AsyncContext, Message, Recipient, StreamHandler};
+
+
+use actix::{Actor, AsyncContext, Recipient, StreamHandler};
 use actix_web::web::Data;
 use actix_web::{get, web, Error, HttpRequest, HttpResponse};
 use actix_web_actors::ws;
 use log::{debug, error};
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize};
 use uuid::Uuid;
 
-use crate::managers::channel_manager::ChannelManager;
-use crate::managers::{recipient_manager, ConnectedMessage, PropagateMessage};
-use crate::{AppState, RecipientManager};
+
+use crate::managers::{ConnectedMessage, PropagateMessage};
+use crate::{AppState};
 
 #[derive(Clone)]
 pub struct Handler {
@@ -80,7 +80,7 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for Handler {
 
                     if recipient_manager.recipients.len() == 0 {
                         let channel_manager = app_state.channel_manager.clone();
-                        let mut channel_manager = channel_manager.lock().unwrap();
+                        let channel_manager = channel_manager.lock().unwrap();
                         let uuid = Uuid::parse_str(&self.uuid).unwrap();
                         channel_manager.mark_channel_as_inactive(uuid);
                     }
@@ -123,7 +123,7 @@ async fn index(
     let channel_manager = app_state.channel_manager.clone();
 
     {
-        let mut channel_manager = channel_manager.lock().unwrap();
+        let channel_manager = channel_manager.lock().unwrap();
 
         if !channel_manager.channel_exists(id.clone()) {
             return Ok(HttpResponse::NotFound().finish());

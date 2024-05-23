@@ -1,4 +1,4 @@
-use actix::{Handler, Message, Recipient};
+use actix::{Message};
 use serde::{Deserialize, Serialize};
 
 pub mod channel;

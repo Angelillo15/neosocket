@@ -2,7 +2,7 @@ use std::env;
 
 use actix_web::web::Data;
 use chrono::Utc;
-use log::{debug, info};
+use log::{debug};
 use tokio_schedule::{every, Job};
 
 use crate::AppState;
@@ -26,7 +26,7 @@ pub async fn delete_unused_channels_task(app_data: Data<AppState>) {
     let current_time = get_current_time_in_seconds();
 
     {
-        let mut channel_manager = app_data.channel_manager.lock().unwrap();
+        let channel_manager = app_data.channel_manager.lock().unwrap();
 
         for (id, channel) in channel_manager
             .channels
@@ -45,7 +45,7 @@ pub async fn delete_unused_channels_task(app_data: Data<AppState>) {
     }
 
     {
-        let mut channel_manager = app_data.channel_manager.lock().unwrap();
+        let channel_manager = app_data.channel_manager.lock().unwrap();
 
         for id in channels_to_delete {
             channel_manager
