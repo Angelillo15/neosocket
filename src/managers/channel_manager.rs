@@ -1,12 +1,11 @@
 use std::collections::HashMap;
 use std::sync::Mutex;
 
-use serde::Serialize;
 use uuid::Uuid;
 
-use crate::ws::channel::Channel;
+use crate::managers::channel::Channel;
 
-#[derive(Debug, Serialize)]
+#[derive(Debug)]
 pub struct ChannelManager {
     pub channels: Mutex<HashMap<Uuid, Channel>>,
 }
@@ -29,6 +28,22 @@ impl ChannelManager {
         match Uuid::parse_str(&id) {
             Ok(uuid) => self.channels.lock().unwrap().contains_key(&uuid),
             Err(_) => false,
+        }
+    }
+
+    pub fn mark_channel_as_active(&self, id: Uuid) {
+        let mut channels = self.channels.lock().unwrap();
+
+        if let Some(channel) = channels.get_mut(&id) {
+            channel.time_since_no_clients = 0;
+        }
+    }
+
+    pub fn mark_channel_as_inactive(&self, id: Uuid) {
+        let mut channels = self.channels.lock().unwrap();
+
+        if let Some(channel) = channels.get_mut(&id) {
+            channel.time_since_no_clients = 0;
         }
     }
 }

@@ -1,4 +1,4 @@
-use serde::Serialize;
+use serde::{Serialize, Serializer};
 use uuid::Uuid;
 
 use crate::utils::get_current_time_in_seconds;
