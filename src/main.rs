@@ -9,7 +9,8 @@ use env_logger::Env;
 use log::{debug, info};
 
 use neosocket::{AppState, services};
-use neosocket::ws::channel_manager::ChannelManager;
+use neosocket::managers::channel_manager::ChannelManager;
+use neosocket::managers::recipient_manager::RecipientManager;
 
 #[tokio::main]
 async fn main() -> std::io::Result<()> {
@@ -17,10 +18,14 @@ async fn main() -> std::io::Result<()> {
     env_logger::Builder::from_env(Env::default().default_filter_or("info")).init();
 
     let host: String = env::var("host").unwrap_or("0.0.0.0".to_string());
-    let port: String = env::var("port").unwrap_or(8080.to_string()).parse().unwrap();
+    let port: String = env::var("port")
+        .unwrap_or(8080.to_string())
+        .parse()
+        .unwrap();
 
     let app_state = Data::new(AppState {
         channel_manager: Arc::new(Mutex::new(ChannelManager::new())),
+        recipient_manager: Arc::new(Mutex::new(RecipientManager::new())),
     });
 
     info!("Starting server at {}:{}", host, port);
@@ -41,7 +46,7 @@ async fn main() -> std::io::Result<()> {
         app = app.service(services::health::endpoints(web::scope("")));
         app
     })
-        .bind(host + ":" + &*port)?
-        .run()
-        .await
+    .bind(host + ":" + &*port)?
+    .run()
+    .await
 }
