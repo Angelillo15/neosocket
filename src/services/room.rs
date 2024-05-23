@@ -2,7 +2,7 @@ use actix_web::{get, HttpResponse, post, Scope};
 use actix_web::web::Data;
 
 use crate::AppState;
-use crate::ws::channel::Channel;
+use crate::managers::channel::Channel;
 
 #[get("/")]
 pub async fn index(app_data: Data<AppState>) -> HttpResponse {
