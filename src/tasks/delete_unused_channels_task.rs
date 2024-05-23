@@ -34,6 +34,10 @@ pub async fn delete_unused_channels_task(app_data: Data<AppState>) {
             .expect("Could not lock channels")
             .iter()
         {
+            if channel.time_since_no_clients == 0 {
+                continue;
+            }
+
             if channel.time_since_no_clients + channel_timeout < current_time {
                 channels_to_delete.push(id.clone());
             }
