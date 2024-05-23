@@ -14,8 +14,9 @@
 </div>
 
 ## About The Project
-
-[![Product Name Screen Shot](https://i.imgur.com/TwxTl6j.gif)](https://example.com)
+<p align="center">
+  <img src="/.github/neosocket.svg" width="200px" alt="NeoSocket logo"/>
+</p>
 
 This project wants to be something similar to [Lucko's ByteSocks](https://github.com/lucko/bytesocks) but written in 
 Rust, making it faster and more efficient.
@@ -47,6 +48,7 @@ This is an example of how to list things you need to use the software and how to
 
 _Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't
 rely on any external dependencies or services._
+[![NeoSocket running](https://i.imgur.com/TwxTl6j.gif)](https://example.com)
 
 1. Clone the repo
    ```sh
