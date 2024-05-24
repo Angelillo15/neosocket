@@ -125,7 +125,7 @@ async fn index(
     let resp = ws::start(
         Handler {
             app_state: app_state.clone(),
-            uuid: id,
+            uuid: id.clone(),
             client_id: Uuid::new_v4(),
         },
         &req,
