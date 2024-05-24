@@ -1,7 +1,7 @@
 <br />
 <div align="center" id="readme-top">
 <h3 align="center">NeoSocket</h3>
-
+  <img src="/.github/neosocket.svg" width="200px" alt="NeoSocket logo"/>
   <p align="center">
     A fast websocket room api
     <br />
@@ -14,10 +14,6 @@
 </div>
 
 ## About The Project
-<p align="center">
-  <img src="/.github/neosocket.svg" width="200px" alt="NeoSocket logo"/>
-</p>
-
 This project wants to be something similar to [Lucko's ByteSocks](https://github.com/lucko/bytesocks) but written in 
 Rust, making it faster and more efficient.
 
@@ -81,7 +77,7 @@ setting the `PORT` environment variable and the host by setting the `HOST` envir
 
 ## License
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
+Distributed under the GNU GPL-3.0 License. See `LICENSE.txt` for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
