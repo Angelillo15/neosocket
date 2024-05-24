@@ -122,24 +122,6 @@ async fn index(
     let id = info.uuid.clone();
     let channel_manager = app_state.channel_manager.clone();
 
-    {
-        let channel_manager = channel_manager.lock().unwrap();
-
-        if !channel_manager.channel_exists(id.clone()) {
-            return Ok(HttpResponse::NotFound().finish());
-        }
-
-        match Uuid::parse_str(&id) {
-            Ok(uuid) => {
-                channel_manager.mark_channel_as_active(uuid);
-            }
-            Err(_) => {
-                error!("Could not parse uuid: {}", id.clone());
-                return Ok(HttpResponse::NotFound().finish());
-            }
-        }
-    }
-
     let resp = ws::start(
         Handler {
             app_state: app_state.clone(),
@@ -150,8 +132,33 @@ async fn index(
         stream,
     );
 
-    debug!("{:?}", resp);
-    resp
+    return match resp {
+        Ok(_) => {
+            let channel_manager = channel_manager.lock().unwrap();
+
+            if !channel_manager.channel_exists(id.clone()) {
+                return Ok(HttpResponse::NotFound().finish());
+            }
+
+            match Uuid::parse_str(&id) {
+                Ok(uuid) => {
+                    channel_manager.mark_channel_as_active(uuid);
+                }
+                Err(_) => {
+                    error!("Could not parse uuid: {}", id.clone());
+                    return Ok(HttpResponse::NotFound().finish());
+                }
+            }
+
+            debug!("Connection established: {:?}", id);
+            debug!("Response: {:?}", resp);
+            resp
+        }
+        Err(e) => {
+            error!("{:?}", e);
+            Ok(HttpResponse::from_error(e))
+        }
+    }
 }
 
 pub fn endpoints(scope: actix_web::Scope) -> actix_web::Scope {
