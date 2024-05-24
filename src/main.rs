@@ -17,8 +17,8 @@ async fn main() -> std::io::Result<()> {
     dotenv().ok();
     env_logger::Builder::from_env(Env::default().default_filter_or("info")).init();
 
-    let host: String = env::var("host").unwrap_or("0.0.0.0".to_string());
-    let port: String = env::var("port")
+    let host: String = env::var("HOST").unwrap_or("0.0.0.0".to_string());
+    let port: String = env::var("PORT")
         .unwrap_or(8080.to_string())
         .parse()
         .unwrap();
