@@ -5,7 +5,7 @@
   <p align="center">
     A fast websocket room api
     <br />
-    <a href="https://neosocket.angelillo15.es">View Demo</a>
+    <a href="https://neosocket.angelillo15.es" target="_blank">View Demo</a>
     ·
     <a href="https://github.com/Angelillo15/neosocket/issues/new?labels=bug&template=bug-report.md">Report Bug</a>
     ·
