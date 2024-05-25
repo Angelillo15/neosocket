@@ -1,17 +1,13 @@
-
-
-
 use actix::{Actor, AsyncContext, Recipient, StreamHandler};
+use actix_web::{Error, get, HttpRequest, HttpResponse, web};
 use actix_web::web::Data;
-use actix_web::{get, web, Error, HttpRequest, HttpResponse};
 use actix_web_actors::ws;
 use log::{debug, error};
-use serde::{Deserialize};
+use serde::Deserialize;
 use uuid::Uuid;
 
-
+use crate::AppState;
 use crate::managers::{ConnectedMessage, PropagateMessage};
-use crate::{AppState};
 
 #[derive(Clone)]
 pub struct Handler {
@@ -158,7 +154,7 @@ async fn index(
             error!("{:?}", e);
             Ok(HttpResponse::from_error(e))
         }
-    }
+    };
 }
 
 pub fn endpoints(scope: actix_web::Scope) -> actix_web::Scope {
