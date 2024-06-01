@@ -1,6 +1,9 @@
 use std::collections::HashMap;
-use actix::Recipient;
-use crate::managers::PropagateMessage;
+
+use actix::{Message, Recipient};
+use serde::Serialize;
+
+use crate::packets::propagate_packet::PropagateMessage;
 
 pub struct RecipientManager {
     pub recipients: HashMap<String, Recipient<PropagateMessage>>,
@@ -26,8 +29,29 @@ impl RecipientManager {
     }
 
     pub fn propagate_message(&self, sender: String, message: String) {
+        self.propagate_message_with_id(sender, message, 1);
+    }
+
+    pub fn propagate_message_with_id(&self, sender: String, message: String, id: u8) {
         for recipient in self.recipients.values() {
-            recipient.do_send(PropagateMessage::new(sender.clone(), message.clone()));
+            recipient.do_send(PropagateMessage {
+                sender: sender.clone(),
+                message: message.clone(),
+                packet_id: id,
+            });
+        }
+    }
+
+    pub fn propagate<T>(&self, sender: String, message: &T)
+    where
+        T: Serialize + Message,
+    {
+        for recipient in self.recipients.values() {
+            recipient.do_send(PropagateMessage {
+                sender: sender.clone(),
+                message: serde_json::to_string(&message).expect("Could not serialize message"),
+                packet_id: 2,
+            });
         }
     }
 }
