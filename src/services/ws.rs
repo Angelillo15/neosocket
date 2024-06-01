@@ -7,13 +7,13 @@ use serde::Deserialize;
 use uuid::Uuid;
 
 use crate::AppState;
-use crate::managers::{ConnectedMessage, PropagateMessage};
+use crate::packets::connected_packet::ConnectedMessage;
 
 #[derive(Clone)]
 pub struct Handler {
     pub app_state: Data<AppState>,
-    uuid: String,
-    client_id: Uuid,
+    pub uuid: String,
+    pub client_id: Uuid,
 }
 
 #[derive(Deserialize)]
@@ -35,6 +35,15 @@ impl Actor for Handler {
                 channel_uuid: self.uuid.clone().parse().expect("Could not parse uuid"),
                 connection_id: self.client_id.to_string(),
             });
+
+            let recipient_manager = self.app_state.recipient_manager.clone();
+            let recipient_manager = recipient_manager.lock().unwrap();
+
+            recipient_manager.propagate_message_with_id(
+                self.client_id.to_string(),
+                "Connected".parse().expect("Could not parse message"),
+                0
+            );
         }
 
         let app_state = self.app_state.clone();
@@ -74,6 +83,12 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for Handler {
                     let mut recipient_manager = app_state.recipient_manager.lock().unwrap();
                     recipient_manager.remove_recipient(self.client_id.to_string());
 
+                    recipient_manager.propagate_message_with_id(
+                        self.client_id.to_string(),
+                        "Disconnected".parse().expect("Could not parse message"),
+                        2
+                    );
+
                     if recipient_manager.recipients.len() == 0 {
                         let channel_manager = app_state.channel_manager.clone();
                         let channel_manager = channel_manager.lock().unwrap();
@@ -89,22 +104,6 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for Handler {
             }
             _ => (),
         }
-    }
-}
-
-impl actix::Handler<PropagateMessage> for Handler {
-    type Result = ();
-
-    fn handle(&mut self, msg: PropagateMessage, ctx: &mut Self::Context) {
-        ctx.text(serde_json::to_string(&msg).expect("Could not serialize message"));
-    }
-}
-
-impl actix::Handler<ConnectedMessage> for Handler {
-    type Result = ();
-
-    fn handle(&mut self, msg: ConnectedMessage, ctx: &mut Self::Context) {
-        ctx.text(serde_json::to_string(&msg).expect("Could not serialize message"));
     }
 }
 
