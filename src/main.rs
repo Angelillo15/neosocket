@@ -19,7 +19,7 @@ async fn main() -> std::io::Result<()> {
 
     let host: String = env::var("HOST").unwrap_or("0.0.0.0".to_string());
     let port: String = env::var("PORT")
-        .unwrap_or(8080.to_string())
+        .unwrap_or(2022.to_string())
         .parse()
         .unwrap();
 
