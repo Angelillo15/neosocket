@@ -31,7 +31,7 @@ impl ChannelManager {
         }
     }
 
-    pub fn mark_channel_as_active(&self, id: Uuid) {
+    pub fn mark_channel_as_active(&self, id: &Uuid) {
         let mut channels = self.channels.lock().unwrap();
 
         if let Some(channel) = channels.get_mut(&id) {
@@ -39,10 +39,10 @@ impl ChannelManager {
         }
     }
 
-    pub fn mark_channel_as_inactive(&self, id: Uuid) {
+    pub fn mark_channel_as_inactive(&self, id: &Uuid) {
         let mut channels = self.channels.lock().unwrap();
 
-        if let Some(channel) = channels.get_mut(&id) {
+        if let Some(channel) = channels.get_mut(id) {
             channel.time_since_no_clients = 0;
         }
     }

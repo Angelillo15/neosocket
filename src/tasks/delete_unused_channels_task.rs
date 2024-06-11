@@ -12,11 +12,11 @@ pub async fn start_scheduler(app_data: Data<AppState>) {
     let task = every(10)
         .seconds()
         .in_timezone(&Utc)
-        .perform(|| async { delete_unused_channels_task(app_data.clone()).await });
+        .perform(|| async { delete_unused_channels_task(&app_data).await });
     task.await;
 }
 
-pub async fn delete_unused_channels_task(app_data: Data<AppState>) {
+pub async fn delete_unused_channels_task(app_data: &Data<AppState>) {
     let channel_timeout = env::var("CHANNEL_TIMEOUT")
         .unwrap_or("30".to_string())
         .parse::<u64>()

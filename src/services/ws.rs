@@ -93,7 +93,7 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for Handler {
                         let channel_manager = app_state.channel_manager.clone();
                         let channel_manager = channel_manager.lock().unwrap();
                         let uuid = Uuid::parse_str(&self.uuid).unwrap();
-                        channel_manager.mark_channel_as_inactive(uuid);
+                        channel_manager.mark_channel_as_inactive(&uuid);
                     }
 
                     debug!("Removed recipient: {:?}", self.client_id);
@@ -137,7 +137,7 @@ async fn index(
 
             match Uuid::parse_str(&id) {
                 Ok(uuid) => {
-                    channel_manager.mark_channel_as_active(uuid);
+                    channel_manager.mark_channel_as_active(&uuid);
                 }
                 Err(_) => {
                     error!("Could not parse uuid: {}", id.clone());
